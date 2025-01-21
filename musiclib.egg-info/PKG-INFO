@@ -1,0 +1,15 @@
+Metadata-Version: 2.2
+Name: musiclib
+Version: 0.1.0
+Summary: manage online music libraries
+Author-email: Andras Zalavari <zalavariandris@gmail.com.com>
+Keywords: python,youtube,spotify,mp3
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: PySide6-essentials
+Requires-Dist: pyedifice
+Requires-Dist: google-auth
+Requires-Dist: google-auth-oauthlib
+Requires-Dist: google-auth-httplib2
+Requires-Dist: google-api-python-client
+Requires-Dist: youtube-dl

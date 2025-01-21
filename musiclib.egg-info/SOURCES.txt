@@ -1,0 +1,6 @@
+pyproject.toml
+musiclib.egg-info/PKG-INFO
+musiclib.egg-info/SOURCES.txt
+musiclib.egg-info/dependency_links.txt
+musiclib.egg-info/requires.txt
+musiclib.egg-info/top_level.txt

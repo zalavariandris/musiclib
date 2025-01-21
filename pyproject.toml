@@ -20,9 +20,12 @@ requires-python = ">=3.8"
 dependencies = [
 
     "PySide6-essentials",
+    "PySide6",  # for webengine
     "pyedifice",
     "google-auth",
     "google-auth-oauthlib",
     "google-auth-httplib2",
-    "google-api-python-client"
+    "google-api-python-client",
+    "youtube_title_parse",
+    "yt-dlp"
 ]

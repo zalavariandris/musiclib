@@ -93,17 +93,20 @@ if __name__ == "__main__":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     print("main")
     # Path to your client secrets file
-    CLIENT_SECRETS_FILE = "../SECRET/MyDJClient_CLIENT_SECRET.json"
+    CLIENT_SECRETS_FILE = "../../SECRET/MyDJClient_CLIENT_SECRET.json"
 
     # Authenticate and create the YouTube API client
-    youtube_service = authenticate(CLIENT_SECRETS_FILE, "../temp/token.pickle")  # File to store credentials
+    youtube_service = authenticate(CLIENT_SECRETS_FILE, "../../temp/token.pickle")  # File to store credentials
     
     print("Fetching liked videos...")
     liked_videos = fetch_youtube_likes(youtube_service, 10)
     
     # Display the liked videos
     print(f"Found {len(liked_videos)} liked videos.")
-    for video in liked_videos:
-        title = video["snippet"]["title"]
-        video_id = video["id"]
-        print(f"{title} - https://www.youtube.com/watch?v={video_id}")
+    import json
+    print(json.dumps(liked_videos,
+                     sort_keys=True, indent=4))
+    # for video in liked_videos:
+    #     title = video["snippet"]["title"]
+    #     video_id = video["id"]
+    #     print(f"{title} - https://www.youtube.com/watch?v={video_id}")
