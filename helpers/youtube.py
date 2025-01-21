@@ -2,7 +2,7 @@
 
 # Sample Python code for fetching liked videos using YouTube Data API v3
 import os
-import googleapiclient.errors
+import pathlib
 
 # Define the scope for read-only access to YouTube
 SCOPES = ["https://www.googleapis.com/auth/youtube.readonly"]
@@ -11,6 +11,7 @@ import os
 import pickle  # To save and load credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+import googleapiclient.errors
 from googleapiclient.discovery import build
 
 def authenticate(client_secrets_file: str, token_file:str):
@@ -41,6 +42,8 @@ def authenticate(client_secrets_file: str, token_file:str):
         credentials = flow.run_local_server(port=0)
 
         # Save credentials for future runs
+        folder = pathlib.Path(token_file).parent
+        folder.mkdir(parents=True, exist_ok=True)
         with open(token_file, "wb") as token:
             pickle.dump(credentials, token)
 

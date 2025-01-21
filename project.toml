@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["musiclib"]
+
+
+[project]
+name = "musiclib"
+version = "0.1.0"
+description = "manage online music libraries"
+authors = [
+    {name = "Andras Zalavari", email = "zalavariandris@gmail.com.com"}
+]
+readme = "README.md"
+keywords = ["python", "youtube", "spotify" , "mp3"]
+requires-python = ">=3.8"
+
+dependencies = [
+
+    "PySide6-essentials",
+    "pyedifice",
+    "google-auth",
+    "google-auth-oauthlib",
+    "google-auth-httplib2",
+    "google-api-python-client"
+]
