@@ -3,7 +3,7 @@
 #
 from typing import *
 
-from PySide6.QtWidgets import QSizePolicy
+from PySide6.QtWidgets import QLabel, QSizePolicy
 from components.web_engine_view import WebEngineView
 
 
@@ -23,7 +23,6 @@ logging.getLogger("Edifice").setLevel(logging.INFO)
 
 
 from song import Song
-
 
 
 @ed.component
@@ -72,12 +71,54 @@ def YoutubePlayer(self, youtube_id:str):
     with ed.VBoxView():
         WebEngineView(html=youtube_embedd(youtube_id), style={"width": 280, "height": 158})
 
+@ed.component
+def DictTable(self, data:dict):
+    with ed.TableGridView():
+        for key, value in data.items():
+            with ed.TableGridRow():
+                ed.Label(f"{key}")
+                if isinstance(value, dict):
+                    DictTable(value)
+                else:
+                    ed.Label(f"{value}")
+
 
 @ed.component
-def MusicList(self):
+def MusicList(self, songs):
+    with ed.VBoxView():
+        ed.Label("Youtube Likes")
+        with ed.VScrollView():
+            with ed.TableGridView(on_click=lambda event: print("table clicked")):
+                with ed.TableGridRow():
+                    ed.Label("idx")
+                    ed.Label("title", on_click=lambda event: print("click"))
+                    ed.Label('artist')
+                    ed.Label("youtube")
+
+                for i, song in enumerate(songs):
+                    with ed.TableGridRow():
+                        ed.Button(str(i), on_click=lambda event: print("click"))
+                        ed.Label(f"{song.title or "unknown title"}", on_click=lambda event: print("click title"))
+                        ed.Label(f"{song.artist or "unknown artist"}")
+                        ed.Label(f"<a href='{song.youtube_link()}'>{song.youtube_link()}</a>", link_open=True, text_format=QtCore.Qt.TextFormat.RichText)
+
+@ed.component
+def SongInspector(self, song:Song|None):
+    with ed.VBoxView():
+        if song:
+            YoutubePlayer(song.youtube_id)
+            with ed.VScrollView():
+                DictTable(song.youtube_data)
+        else:
+            ed.Label("no selection")
+
+
+@ed.component
+def Main(self):
     # # Authenticate and create the YouTube API client
     songs, set_songs = ed.use_state([])
     message, set_message = ed.use_state("")
+    selected_idx, set_selected_idx = ed.use_state(0)
 
     async def fetch_videos():
         try:
@@ -97,44 +138,28 @@ def MusicList(self):
                     video_id = video["id"]
                     import youtube_title_parse
 
-                    info = youtube_title_parse.get_artist_title(video['snippet']["title"])
+                    artist_title = youtube_title_parse.get_artist_title(video['snippet']["title"])
 
-                    yield Song(title=     info[1] if info else video['snippet']["title"], 
-                               artist=    info[0] if info else None, 
-                               youtube_id=video["id"])
+                    yield Song(title=     artist_title[1] if artist_title else video['snippet']["title"], 
+                               artist=    artist_title[0] if artist_title else None, 
+                               youtube_id=video["id"],
+                               youtube_data=video)
 
             set_songs([_ for _ in process_videos(youtube_videos)])
-            set_message("")
+            set_message("youtube likes loaded!")
         except Exception as err:
             set_message(f"{err}")
             print(err)
 
     ed.use_async(lambda: fetch_videos(), [])
 
-    with ed.VBoxView():
-        ed.Label("Youtube Likes")
-        if message:
-            ed.Label(message)
-        with ed.VScrollView():
-            with ed.TableGridView():
-                with ed.TableGridRow():
-                    ed.Label("title")
-                    ed.Label('artist')
-                    ed.Label("youtube")
-
-                for i, song in enumerate(songs):
-                    with ed.TableGridRow():
-                        ed.Label(f"{song.title or "unknown title"}")
-                        ed.Label(f"{song.artist or "unknown artist"}")
-                        ed.Label(f"<a href='{song.youtube_link()}'>{song.youtube_link()}</a>", link_open=True, text_format=QtCore.Qt.TextFormat.RichText)
-    
-
-@ed.component
-def Main(self):
     with ed.Window(title="Music Library Manager", _size_open=(800,600)):
         with ed.VBoxView():
-            YoutubePlayer("439J8ONDm5c")
-            MusicList()
+            with ed.HBoxView():
+                MusicList(songs)
+                SongInspector(songs[selected_idx] if songs else None)
+                
+            ed.Label(f"statusbar: {message}")
             
             # WebEngineView(html=embedded_youtube("439J8ONDm5c"))
 

@@ -27,5 +27,6 @@ dependencies = [
     "google-auth-httplib2",
     "google-api-python-client",
     "youtube_title_parse",
-    "yt-dlp"
+    "yt-dlp",
+    "youtube-title-parse"
 ]
