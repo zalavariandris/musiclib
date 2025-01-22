@@ -87,7 +87,6 @@ def fetch_youtube_likes(youtube, max_videos: int, batch_size:int=10) -> list[dic
 
 
 if __name__ == "__main__":
-
     import sys
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
