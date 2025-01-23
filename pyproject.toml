@@ -28,5 +28,7 @@ dependencies = [
     "google-api-python-client",
     "youtube_title_parse",
     "yt-dlp",
-    "youtube-title-parse"
+    "youtube-title-parse",
+    "flet",
+    "reactivex"
 ]
